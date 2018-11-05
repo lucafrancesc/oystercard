@@ -15,10 +15,7 @@ class Oystercard
     fail "Card limit of #{@limit} exceeded" if full?
     fail "Card limit of #{@limit} exceeded" if @balance + amount > @limit
     @balance += amount
-  end
-
-  def deduct
-    @balance -= MIN_FARE
+    "Your new balance is #{@balance}"
   end
 
   def in_journey?
@@ -39,5 +36,11 @@ class Oystercard
   def full?
     balance >= @limit
   end
+
+  def deduct(fare = MIN_FARE)
+    @balance -= fare
+    "Your new balance is #{@balance}"
+  end
+
 
 end

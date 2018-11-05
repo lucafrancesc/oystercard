@@ -29,8 +29,7 @@ describe Oystercard do
     it 'expects the balance to be updated' do
       subject.top_up(10.00)
       subject.touch_in
-      subject.touch_out
-      expect{ subject.deduct }.to change{ subject.balance }.by -(Oystercard::MIN_FARE)
+      expect{ subject.touch_out }.to change{ subject.balance }.by -(Oystercard::MIN_FARE)
       expect(subject).not_to be_in_journey
     end
 
