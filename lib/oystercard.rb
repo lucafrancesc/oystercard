@@ -11,6 +11,7 @@ class Oystercard
 
   def top_up(amount)
     fail "Card limit of #{@limit} exceeded" if full?
+    fail "Card limit of #{@limit} exceeded" if @balance + amount > @limit
     @balance += amount
   end
 
