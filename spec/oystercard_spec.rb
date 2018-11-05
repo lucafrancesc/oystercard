@@ -23,7 +23,30 @@ describe Oystercard do
       card_limit = Oystercard::CARD_LIMIT
       expect { subject.top_up(card_limit+1) }.to raise_error "Card limit of #{card_limit} exceeded"
     end
+  end
 
+  describe '#deduct' do
+    it 'expects the balance to be updated' do
+      subject.top_up(10.00)
+      subject.touch_in
+      subject.touch_out
+      expect{ subject.deduct }.to change{ subject.balance }.by -(Oystercard::MIN_FARE)
+      expect(subject).not_to be_in_journey
+    end
+
+    it 'raises an error if the balance is less than the min fare' do
+      expect { subject.touch_in }.to raise_error 'Not enough credit'
+    end
+
+    it 'can touch in and expects to be in_journey' do
+      subject.top_up(10.00)
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+
+    it 'expects not be be in_journey(in use)' do
+      expect(subject).not_to be_in_journey
+    end
 
   end
 
