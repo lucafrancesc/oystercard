@@ -28,14 +28,15 @@ class Oystercard
 
   def touch_in(station)
     fail 'Not enough credit' if founds?
-    @entry_station = station
     @in_use = true
+    @journeys[@journeys.keys[0].next] = [@entry_station = station]
   end
 
   def touch_out(station)
-    @exit_station = station
-    deduct
     @in_use = false
+    deduct
+    @journeys.values.last.push(@exit_station = station)
+    @entry_station = nil
     balance
   end
 
