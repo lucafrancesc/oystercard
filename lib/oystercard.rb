@@ -29,7 +29,7 @@ class Oystercard
   def touch_in(station)
     fail 'Not enough credit' if founds?
     @in_use = true
-    @journeys[@journeys.keys[0].next] = [@entry_station = station]
+    @journeys[@journeys.keys.last.next] = [@entry_station = station]
   end
 
   def touch_out(station)

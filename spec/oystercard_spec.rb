@@ -2,8 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
 
-  let(:oyster ) { Oystercard.new  }
-  let(:oyster2) { Oystercard.new(10.00) }
+  let(:oyster ) { described_class.new  }
+  let(:oyster2) { described_class.new(10.00) }
   let(:entry_station) { double :station }
   let(:exit_station) { double :station }
 
