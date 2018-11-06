@@ -2,9 +2,10 @@ require 'oystercard'
 
 describe Oystercard do
 
-  # let(:oyster2) { Oystercard.new(10.00) }
-  let(:oyster) { Oystercard.new }
-  let(:station){ double :station }
+  let(:oyster ) { Oystercard.new  }
+  let(:oyster2) { Oystercard.new(10.00) }
+  let(:station) { double :station }
+  let(:station2) { double :station2 }
   describe '#balance' do
     it 'expects the default balance to be 0' do
       expect(oyster.balance).to eq 0.00
@@ -29,12 +30,15 @@ describe Oystercard do
   end
 
   describe '#deduct' do
+    it 'expects the balance to be updated' do
+      oyster2.touch_in(station)
+      expect{ oyster2.touch_out(station2) }.to change{ oyster2.balance }.by -(Oystercard::MIN_FARE)
+    end
 
     it 'expects the balance to be updated' do
-      oyster.top_up(10.00)
-      oyster.touch_in(station)
-      expect{ oyster.touch_out }.to change{ oyster.balance }.by -(Oystercard::MIN_FARE)
-      expect(oyster).not_to be_in_journey
+      oyster2.touch_in(station)
+      oyster2.touch_out(station2)
+      expect(oyster2).not_to be_in_journey
     end
 
     it 'raises an error if the balance is less than the min fare' do
@@ -42,9 +46,8 @@ describe Oystercard do
     end
 
     it 'can touch in and expects to be in_journey' do
-      oyster.top_up(10.00)
-      oyster.touch_in(station)
-      expect(oyster).to be_in_journey
+      oyster2.touch_in(station)
+      expect(oyster2).to be_in_journey
     end
 
     it 'expects not be be in_journey(in use)' do
@@ -52,20 +55,22 @@ describe Oystercard do
     end
 
     it 'expects oyster to set the station to nil' do
-      # allow(oyster).to receive(:touch_out) { nil }
-      oyster.touch_out
-      expect(oyster.entry_station).to eq nil
+      # allow(oyster).to receive(:touch_out(station2)) { nil }
+      oyster2.touch_in(station)
+      oyster2.touch_out(station2)
+      expect(oyster2.entry_station).to eq station
     end
   end
 
   describe '#touch_in' do
-
     it 'expects oyster to remember the entry station' do
       # allow(oyster).to receive(:touch_in) { station }
-      oyster.top_up(10.00)
-      oyster.touch_in(station)
-      expect(oyster.entry_station).to eq station
+      oyster2.touch_in(station)
+      expect(oyster2.entry_station).to eq station
     end
   end
 
+  describe '#journeys' do
+    it { expect(subject).to respond_to :journeys}
+  end
 end
