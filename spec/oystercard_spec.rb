@@ -75,15 +75,13 @@ describe Oystercard do
     it { expect(subject).to respond_to :journeys}
 
     it 'checks that journeys list is empty by default' do
-      expect(oyster2.journeys.keys[0]).to eq 0
-      expect(oyster2.journeys.values[0]).to eq []
+      expect(oyster2.journeys).to eq []
     end
 
     it 'stores journeys into a hash' do
       oyster2.touch_in(entry_station)
       oyster2.touch_out(exit_station)
-      expect(oyster2.journeys.keys[1]).to eq 1
-      expect(oyster2.journeys.values[1]).to eq [entry_station, exit_station]
+      expect(oyster2.journeys).to eq [{entry_station: entry_station, exit_station: exit_station}]
     end
 
   end

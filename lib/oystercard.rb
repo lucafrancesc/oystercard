@@ -1,3 +1,4 @@
+require_relative 'station'
 class Oystercard
 
   attr_reader :balance, :entry_station, :exit_station, :journeys
@@ -8,10 +9,10 @@ class Oystercard
   def initialize(balance = DEFAULT_BALANCE, limit = CARD_LIMIT, entry_station = nil, exit_station = nil)
     @balance = balance
     @limit = limit
-    @in_use = false
+    @in_use = nil
     @entry_station = entry_station
     @exit_station = exit_station
-    @journeys = { 0 => [] }
+    @journeys = []
   end
 
   def top_up(amount)
@@ -22,21 +23,21 @@ class Oystercard
   end
 
   def in_journey?
-    # !!entry_station
-    @in_use
+    !!entry_station
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     fail 'Not enough credit' if founds?
     @in_use = true
-    @journeys[@journeys.keys.last.next] = [@entry_station = station]
+    @entry_station = entry_station
   end
 
-  def touch_out(station)
+  def touch_out(exit_station)
     @in_use = false
     deduct
-    @journeys.values.last.push(@exit_station = station)
-    @entry_station = nil
+    @exit_station = exit_station
+    @journeys << { entry_station: @entry_station, exit_station: @exit_station}
+    @entry_station, @exit_station = nil
     balance
   end
 
