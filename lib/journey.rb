@@ -13,20 +13,20 @@ class Journey
 
   def touched_in(station = nil)
     @entry_station = station
-    @journey << @entry_station
+    @journey << @entry_station if station != nil
   end
 
   def touched_out(station = nil)
     @exit_station = station
-    @journey << @exit_station
+    @journey << @exit_station if station != nil
   end
 
   def fare
-    complete? ? MIN_FARE : FINE
+    !!complete? ? MIN_FARE : FINE
   end
 
   def complete?
-    false if journey.include?nil
+    return true if @journey.count == 2
   end
 
 end
