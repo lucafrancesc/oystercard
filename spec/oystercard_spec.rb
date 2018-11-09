@@ -4,6 +4,8 @@ describe Oystercard do
 
   let(:oyster ) { described_class.new  }
   let(:oyster2) { described_class.new(10.00) }
+  let(:entry_station){ double :entry_station }
+  let(:exit_station){ double :exit_station }
 
   describe '#balance' do
     it 'expects the default balance to be 0' do
@@ -30,29 +32,31 @@ describe Oystercard do
 
   describe '#deduct' do
     it 'expects the balance to be updated' do
-      oyster2.touch_in
-      expect{ oyster2.touch_out }.to change{ oyster2.balance }.by -(Oystercard::MIN_FARE)
+      oyster2.touch_in(entry_station)
+      oyster2.touch_out(exit_station)
+      expect(oyster2.balance).to eq 9
+    
     end
 
     it 'expects the balance to be updated' do
-      oyster2.touch_in
-      oyster2.touch_out
+      oyster2.touch_in(entry_station)
+      oyster2.touch_out(exit_station)
       expect(oyster2).not_to be_in_journey
     end
 
     it 'raises an error if the balance is less than the min fare' do
-      expect { oyster.touch_in }.to raise_error 'Not enough credit'
+      expect { oyster.touch_in(entry_station) }.to raise_error 'Not enough credit'
     end
 
     it 'can touch in and expects to be in_journey' do
-      oyster2.touch_in
+      oyster2.touch_in(entry_station)
       expect(oyster2).to be_in_journey
     end
 
-    it 'expects not be be in_journey(in use)' do
+    it 'expects not be be in_journey/(in use)' do
       expect(oyster).not_to be_in_journey
     end
   end
 
-  
+
 end

@@ -1,16 +1,17 @@
 require_relative 'station'
 require_relative 'journey'
+require_relative 'journeylog'
 class Oystercard
 
   attr_reader :balance
   DEFAULT_BALANCE = 0.00
   CARD_LIMIT = 90.00
-  MIN_FARE = 1
 
-  def initialize(balance = DEFAULT_BALANCE, limit = CARD_LIMIT)
+  def initialize(balance = DEFAULT_BALANCE, limit = CARD_LIMIT, journeylog = JourneyLog.new)
     @balance = balance
     @limit = limit
     @in_use = nil
+    @journeylog = journeylog
   end
 
   def top_up(amount)
@@ -20,19 +21,26 @@ class Oystercard
     "Your new balance is #{@balance}"
   end
 
+  def touch_in(station)
+    fail 'Not enough credit' if founds?
+    @in_use = true
+    @journeylog.start(station)
+  end
+
+  def touch_out(station)
+    @in_use = false
+    @journeylog.finish(station)
+    @journeylog.journeys
+    deduct
+    balance
+  end
+
   def in_journey?
     !!@in_use
   end
 
-  def touch_in
-    fail 'Not enough credit' if founds?
-    @in_use = true
-  end
-
-  def touch_out
-    @in_use = false
-    deduct
-    balance
+  def show_journeys
+    @journeylog.journeys
   end
 
   private
@@ -41,11 +49,12 @@ class Oystercard
   end
 
   def founds?
-    MIN_FARE > @balance
+    Journey::MIN_FARE > @balance
   end
 
-  def deduct(fare = MIN_FARE)
-    @balance -= fare
+  def deduct
+    @balance -= Journey::MIN_FARE
+    # @journeylog.cost
     "Your new balance is #{@balance}"
   end
 
