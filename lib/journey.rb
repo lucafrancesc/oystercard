@@ -6,23 +6,27 @@ class Journey
   MIN_FARE = 1
   FINE = 6
 
-  attr_reader :entry_station, :exit_station
-
-  def initialize
+  attr_reader :journey, :entry_station, :exit_station
+  def initialize(journey = nil)
+    @journey = []
   end
 
-  def entry_station(station)
+  def touched_in(station = nil)
+    @entry_station = station
+    @journey << @entry_station
   end
 
-  def exit_station(station)
+  def touched_out(station = nil)
+    @exit_station = station
+    @journey << @exit_station
   end
 
   def fare
-    FINE
+    complete? ? MIN_FARE : FINE
   end
 
   def complete?
-
+    false if journey.include?nil
   end
 
 end

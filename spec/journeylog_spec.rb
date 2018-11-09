@@ -4,9 +4,9 @@ describe JourneyLog do
 
   let(:entry_station){ double :entry_station }
   let(:exit_station){ double :exit_station }
-  #
-  # expect(subject).to respond_to(:start)
-  # expect(subject).to respond_to(:finish)
+
+  it { is_expected.to respond_to :start }
+  it { is_expected.to respond_to :finish }
 
   describe '#journeys' do
 

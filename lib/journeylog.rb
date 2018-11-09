@@ -14,12 +14,12 @@ attr_reader :entry_station, :exit_station, :journeys
   def start(station = nil)
     @journey = Journey.new
     @entry_station = station
-    @journey.entry_station(station)
+    @journey.touched_in(station)
   end
 
   def finish(station = nil)
     @exit_station = station
-    @journey.exit_station(station)
+    @journey.touched_out(station)
     add_journey
   end
 
